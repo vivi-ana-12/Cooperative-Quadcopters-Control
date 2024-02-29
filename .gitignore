@@ -1,0 +1,7 @@
+Videos/
+Models/inputsTrainingDecimated100.csv
+Models/outputsTrainingDecimated100.csv
+Graphs/Training Trajectories/
+!Graphs/Training Trajectories/Histograms/*
+Graphs/Test\ Trajectories/
+!Graphs/Test\ Trajectories/Histograms/*

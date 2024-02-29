@@ -1,0 +1,1 @@
+In this folder are the graphs of the simulations resulting from test 2, created from the "ANNTest.py" file executed with the "Neural Network - Test" scene and with the variable quadcopters_number set to 8. The graphs show the behavior of the drones without the ANN controller. Drones from 0 to 3 are without load and from 4 to 7 with load. 
