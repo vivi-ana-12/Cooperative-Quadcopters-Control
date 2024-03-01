@@ -10,7 +10,7 @@ import os.path
 def SaveData(x,y,z,number): 
     #print('x:'+str(len(x))+'y:'+str(len(y))+'z:'+str(len(z)))
 
-    filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectories"
+    filename = "..\\DataBase\\Training Trajectories\\TrainingTrajectories"
     sheets = {'x':x,'y':y,'z':z}
     data = pd.DataFrame(sheets)
     
@@ -42,7 +42,7 @@ def plotData(trajectory):
     })
     
     
-    filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectories"
+    filename = "..\\DataBase\\Training Trajectories\\TrainingTrajectories"
     results, sheets = readAllSheets(filename+".xlsx")
     
     dataset = [[[] for x in range(3)] for y in range(len(sheets))] 

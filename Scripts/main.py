@@ -19,9 +19,9 @@ def sysCall_cleanup(sim,dataset,quadcopters_number,load,filename,trajectoryType,
 def saveFile(dataset,load,trajectoryType,trajectoryNumber):
     
     if trajectoryType:     
-        filename = ".\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
+        filename = "..\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
     else: 
-        filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"            
+        filename = "..\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"            
             
     sheets = [] 
     
@@ -82,9 +82,9 @@ load = True # Indicates if the Coppelia simulation is with Load or without Load 
 
 #Path of the Excel document where the trajectory will be read 
 if trajectoryType:     
-    filename = ".\\DataBase\\Test trajectories\\TestTrajectories.xlsx"    
+    filename = "..\\DataBase\\Test trajectories\\TestTrajectories.xlsx"    
 else: 
-    filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectories.xlsx"    
+    filename = "..\\DataBase\\Training Trajectories\\TrainingTrajectories.xlsx"    
    
 results, sheets = VisualizeGraphs.readAllSheets(filename) 
   

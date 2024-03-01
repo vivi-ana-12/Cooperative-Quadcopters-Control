@@ -25,7 +25,7 @@ def readAllSheets(filename):
 def SaveData(targetsX,targetsY,targetsZ,x,y,z,drone,type): 
     #print('x:'+str(len(x))+'y:'+str(len(y))+'z:'+str(len(z)))
 
-    filename = '.\\DataBase\\Training Trajectories\\TrainingTrajectories-ANN'
+    filename = '..\\DataBase\\Training Trajectories\\TrainingTrajectories-ANN'
     
     sheets = {'target x':targetsX,'target y':targetsY,'target z':targetsZ,'x':x,'y':y,'z':z}
     data = pd.DataFrame(sheets)
@@ -49,7 +49,7 @@ def createDataSet(type):
 
     
     for trajectory in range (1,limit):
-        results, sheets = readAllSheets(".\\DataBase\\"+type+" Trajectories\\"+type+"Trajectory_"+str(trajectory)+"_Results.xlsx")
+        results, sheets = readAllSheets("..\\DataBase\\"+type+" Trajectories\\"+type+"Trajectory_"+str(trajectory)+"_Results.xlsx")
         # for drone in range (4):
 
         targetsX.extend(results[sheets[drone]].loc[:,"target x"])
@@ -64,7 +64,7 @@ def createDataSet(type):
 type = "Training"
 createDataSet()
 drone = 0
-results, sheets = readAllSheets('.\\DataBase\\'+type+' Trajectories\\'+type+'Trajectories-ANN.xlsx')
+results, sheets = readAllSheets('..\\DataBase\\'+type+' Trajectories\\'+type+'Trajectories-ANN.xlsx')
 targetsX = results[sheets[drone]].loc[:,"target x"]
 targetsY = results[sheets[drone]].loc[:,"target y"]
 targetsZ = results[sheets[drone]].loc[:,"target z"]

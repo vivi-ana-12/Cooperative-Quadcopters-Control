@@ -30,7 +30,7 @@ def createDataSet(delay):
     
     for trajectory in range (1,131): 
         print(trajectory)
-        results, sheets = readAllSheets(".\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectory)+"_Results.xlsx")
+        results, sheets = readAllSheets("..\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectory)+"_Results.xlsx")
         # for drone in range (4):  
         drone = random.randrange(0, 4, 1)
         actualState = delay+2
@@ -61,8 +61,8 @@ def createDataSet(delay):
     
     #----------------------------------------- Saving Data ------------------------------------------------
     
-    pd.DataFrame(inputs).to_csv('.\\models\\'+str(delay)+' delays\\inputsTrainingDecimated100.csv', sep=';')
-    pd.DataFrame(outputs).to_csv('.\\models\\'+str(delay)+' delays\\outputsTrainingDecimated100.csv', sep=';')
+    pd.DataFrame(inputs).to_csv('..\\models\\'+str(delay)+' delays\\inputsTrainingDecimated100.csv', sep=';')
+    pd.DataFrame(outputs).to_csv('..\\models\\'+str(delay)+' delays\\outputsTrainingDecimated100.csv', sep=';')
 
     return pd.DataFrame(inputs),pd.DataFrame(outputs)
  
@@ -71,8 +71,8 @@ def readDataSet(delay):
     # inputs_training = pd.read_csv('.\\Models\\'+str(delay)+' delays\\inputsTraining'+str(delay)+'.csv', sep=';').iloc[:,1:]
     # outputs_training = pd.read_csv('.\\Models\\'+str(delay)+' delays\\outputsTraining'+str(delay)+'.csv', sep=';').iloc[:,1:]
     
-    inputs_training = pd.read_csv('.\\models\\'+str(delay)+' delays\\inputsTrainingDecimated100.csv', sep=';').iloc[:,1:]
-    outputs_training = pd.read_csv('.\\models\\'+str(delay)+' delays\\outputsTrainingDecimated100.csv', sep=';').iloc[:,1:]
+    inputs_training = pd.read_csv('..\\models\\'+str(delay)+' delays\\inputsTrainingDecimated100.csv', sep=';').iloc[:,1:]
+    outputs_training = pd.read_csv('..\\models\\'+str(delay)+' delays\\outputsTrainingDecimated100.csv', sep=';').iloc[:,1:]
 
     return inputs_training,outputs_training
 
@@ -80,7 +80,7 @@ def readDataSet(delay):
 delay = 8
 modelPath = "64-32-16-8 130"  
 
-model = tf.keras.models.load_model(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath +"\\ANN_"+ modelPath +"_"+str(delay)+"delays.h5")
+model = tf.keras.models.load_model("..\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath +"\\ANN_"+ modelPath +"_"+str(delay)+"delays.h5")
 
 
 opt = tf.keras.optimizers.Adam(learning_rate=0.00011)
@@ -124,7 +124,7 @@ history_fine = model.fit(inputs_train, outputs_train, validation_split=0.2, epoc
 # plt.show()
 
 modelPath = "64-32-16-8 130 FineTuning - 1"  
-mkdir(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath)
+mkdir("..\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath)
 
 # plt.savefig(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath+"\\"+str(delay)+" delays, "+modelPath+".pdf")
 # plt.savefig(".\\models\\"+str(delay)+" delays\\Models Loss - Graphs\\"+str(delay)+" delays, "+modelPath+".jpg")
@@ -136,7 +136,7 @@ mkdir(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath)
 
 
 
-model.save(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath+"\\ANN_"+modelPath+"_"+str(delay)+"delays.h5")
+model.save("..\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath+"\\ANN_"+modelPath+"_"+str(delay)+"delays.h5")
 
 # pd.DataFrame(loss).to_csv(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath+"\\loss.csv", sep=';')
 # pd.DataFrame(val_loss).to_csv(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath+"\\val_loss.csv", sep=';')

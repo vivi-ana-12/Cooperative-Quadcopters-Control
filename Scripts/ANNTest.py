@@ -30,7 +30,7 @@ def sysCall_cleanup(sim,dataset,quadcopters_number,initPos,predictions,ownFrameP
      
     
 def plotData(trajectoryNumber,quadcopters_number,delay):
-    filename = ".\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx" 
+    filename = "..\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx" 
 
     results, sheets = VisualizeGraphs.readAllSheets(filename) # Open and read the file
     
@@ -107,17 +107,17 @@ def plotData(trajectoryNumber,quadcopters_number,delay):
         
         if drones == 8: # Save the file 
             if graph == 0: 
-                plt.savefig(".\\Graphs\\Test Results\\Test 2\\Test2_Trajectory"+str(trajectoryNumber)+"W.pdf")
+                plt.savefig("..\\Graphs\\Test Results\\Test 2\\Test2_Trajectory"+str(trajectoryNumber)+"W.pdf")
             else: 
-                plt.savefig(".\\Graphs\\Test Results\\Test 2\\Test2_Trajectory"+str(trajectoryNumber)+"WO.pdf")
+                plt.savefig("..\\Graphs\\Test Results\\Test 2\\Test2_Trajectory"+str(trajectoryNumber)+"WO.pdf")
         else: 
-            plt.savefig(".\\Graphs\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"WO.pdf")
+            plt.savefig("..\\Graphs\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"WO.pdf")
 
     
     
 def saveFile(dataset,trajectoryNumber,quadcopters_number,predictionsError,initPos,allPredictions):
     sheets = []
-    filename = ".\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    
+    filename = "..\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    
     writer = pd.ExcelWriter(filename) #Create the document or overwrite it
     
     for i in range (quadcopters_number): # Create a sheet for each drone
@@ -194,9 +194,9 @@ trajectoryNumber = "11" # ------------------------------------------------------
 
 #Path of the Excel document where the trajectory will be read 
 if trajectoryType:     
-    filename = ".\\DataBase\\Test trajectories\\TestTrajectories.xlsx"    
+    filename = "..\\DataBase\\Test trajectories\\TestTrajectories.xlsx"    
 else: 
-    filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectories.xlsx"    
+    filename = "..\\DataBase\\Training Trajectories\\TrainingTrajectories.xlsx"    
    
 results, sheets = VisualizeGraphs.readAllSheets(filename) 
 trajectory = results [trajectoryNumber]
@@ -220,7 +220,7 @@ predictionsError = [[[] for x in range(3)] for y in range(quadcopters_number)]
 targetTrajectory = [[[] for x in range(3)] for y in range(quadcopters_number)]  
 
 
-model = tf.keras.models.load_model(".\\models\\ANN_64-32-16-8 Fine-Tuning 2_16delays.h5") 
+model = tf.keras.models.load_model("..\\models\\ANN_64-32-16-8 Fine-Tuning 2_16delays.h5") 
 print(model.summary())
 
 

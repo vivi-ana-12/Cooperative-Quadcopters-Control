@@ -22,8 +22,8 @@ def readAllSheets(filename):
 def SaveData(predictions,trajectory_number,modelPath): 
     #print('x:'+str(len(x))+'y:'+str(len(y))+'z:'+str(len(z)))
 
-    # filename = '.\\Models\\8 delays\\8 delays, '+modelPath+'\\'+modelPath+' - Test Data'
-    filename = '.\\Models\\4 delays\\4 delays, '+modelPath+'\\'+modelPath+' - Test Data'
+    # filename = '..\\Models\\8 delays\\8 delays, '+modelPath+'\\'+modelPath+' - Test Data'
+    filename = '..\\Models\\4 delays\\4 delays, '+modelPath+'\\'+modelPath+' - Test Data'
     
     sheets = {'prediction x':predictions.iloc[:,0],'prediction y':predictions.iloc[:,1],'prediction z':predictions.iloc[:,2]}
     data = pd.DataFrame(sheets)
@@ -33,11 +33,11 @@ def SaveData(predictions,trajectory_number,modelPath):
             
 
 def ReadData(modelPath,trajectory_number): 
-    results, sheets = readAllSheets(".\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectory_number)+"_Results.xlsx")
+    results, sheets = readAllSheets("..\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectory_number)+"_Results.xlsx")
     # results[sheets[0]].iloc[:,1:3] = results[sheets[0]].iloc[:,1:3]*5
     # results[sheets[0]].iloc[:,4:6] = results[sheets[0]].iloc[:,4:6]*5
 
-    predictions, sheet= readAllSheets('.\\Models\\4 delays\\4 delays, '+modelPath+'\\'+modelPath+' - Test Data.xlsx')
+    predictions, sheet= readAllSheets('..\\Models\\4 delays\\4 delays, '+modelPath+'\\'+modelPath+' - Test Data.xlsx')
 
     delay = 4
 
@@ -71,13 +71,13 @@ def ReadData(modelPath,trajectory_number):
     
 def Predict(modelPath):
     delay = 16
-    # model = tf.keras.models.load_model(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath +"\\ANN_"+ modelPath +"_"+str(delay)+"delays.h5")
-    model = tf.keras.models.load_model(".\\models\\ANN_64-32-16-8 Fine-Tuning 2_16delays.h5")
+    # model = tf.keras.models.load_model("..\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+modelPath +"\\ANN_"+ modelPath +"_"+str(delay)+"delays.h5")
+    model = tf.keras.models.load_model("..\\models\\ANN_64-32-16-8 Fine-Tuning 2_16delays.h5")
     print(model.summary())
     
     # for trajectory_number in range (1,11):
     trajectory_number = 5
-    results, sheets = readAllSheets(".\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectory_number)+"_Results.xlsx")
+    results, sheets = readAllSheets("..\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectory_number)+"_Results.xlsx")
     results[sheets[0]] = results[sheets[0]].query('index%2 != 0')
 
     # results[sheets[0]].loc[:,"target x"] =  results[sheets[0]].loc[:,"target x"] - results[sheets[0]].loc[1,"target x"]
@@ -161,12 +161,12 @@ def Predict(modelPath):
     ax[2].plot(time,results[sheets[0]].iloc[:,3])
     ax[2].plot(time,results[sheets[0]].iloc[:,6])
     
-    # plt.savefig(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+ modelPath +"\\"+modelPath+" Test "+str(trajectory_number)+"multiplied.pdf")
-    plt.savefig(".\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+ modelPath +"\\"+modelPath+" Test "+str(trajectory_number)+".pdf")
+    # plt.savefig("..\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+ modelPath +"\\"+modelPath+" Test "+str(trajectory_number)+"multiplied.pdf")
+    plt.savefig("..\\models\\"+str(delay)+" delays\\"+str(delay)+" delays, "+ modelPath +"\\"+modelPath+" Test "+str(trajectory_number)+".pdf")
     
-    # plt.savefig(".\\Models\\"+str(delay)+" delays\\Tests\\PDF\\"+str(delay)+" delays, "+modelPath+" Test "+str(trajectory_number)+".pdf")
-    # plt.savefig(".\\Models\\"+str(delay)+" delays\\Tests\\jpg\\"+str(delay      delays, "+modelPath+" Test "+str(trajectory_number)+"multiplied.jpg")
-    plt.savefig(".\\Models\\"+str(delay)+" delays\\Tests\\jpg\\"+str(delay)+" delays, "+modelPath+" Test "+str(trajectory_number)+".jpg")
+    # plt.savefig("..\\Models\\"+str(delay)+" delays\\Tests\\PDF\\"+str(delay)+" delays, "+modelPath+" Test "+str(trajectory_number)+".pdf")
+    # plt.savefig("..\\Models\\"+str(delay)+" delays\\Tests\\jpg\\"+str(delay      delays, "+modelPath+" Test "+str(trajectory_number)+"multiplied.jpg")
+    plt.savefig("..\\Models\\"+str(delay)+" delays\\Tests\\jpg\\"+str(delay)+" delays, "+modelPath+" Test "+str(trajectory_number)+".jpg")
 
     # plt.close(fig)
     # SaveData(predictions,trajectory_number,modelPath)
