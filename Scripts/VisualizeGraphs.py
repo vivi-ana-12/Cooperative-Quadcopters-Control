@@ -3,7 +3,6 @@ from matplotlib.lines import Line2D
 import pandas as pd
 import os.path
 
-
 def readAllSheets(filename):
     if not os.path.isfile(filename):
         return None
@@ -19,12 +18,12 @@ def readAllSheets(filename):
     return results, sheets
 
 def plotData(trajectoryNumber,load,saveGraph,trajectoryType):
-    
+
     if trajectoryType:     
-        filename = "..\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
+        filename = ".\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
     else: 
-        filename = "..\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
-        
+        filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
+    
     results, sheets = readAllSheets(filename)
     
     dataset = [[[] for x in range(13)] for y in range(len(sheets))] 
@@ -102,9 +101,9 @@ def plotData(trajectoryNumber,load,saveGraph,trajectoryType):
             suffix = "WO"
             
         if trajectoryType:  
-            plt.savefig("..\\Graphs\\Test trajectories\\TestTrajectory"+str(trajectoryNumber)+"_"+str(suffix)+".pdf")
+            plt.savefig(".\\Graphs\\Test trajectories\\TestTrajectory"+str(trajectoryNumber)+"_"+str(suffix)+".pdf")
         else: 
-            plt.savefig("..\\Graphs\\Training trajectories\\TrainingTrajectory"+str(trajectoryNumber)+"_"+str(suffix)+".pdf")
+            plt.savefig(".\\Graphs\\Training trajectories\\TrainingTrajectory"+str(trajectoryNumber)+"_"+str(suffix)+".pdf")
 
     
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
