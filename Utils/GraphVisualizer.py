@@ -12,14 +12,14 @@ class GraphVisualizer:
             "font.size": 13
         })
     
-    def plotData(self, trajectoryNumber,load,saveGraph,trajectoryType):
+    def plotDataset(self, trajectoryNumber,load,saveGraph,trajectoryType):
         variables = ["x(m)", "y(m)", "z(m)", "Error x", "Error y", "Error z"]
         if trajectoryType:     
             filename = ".\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
         else: 
             filename = ".\\DataBase\\Training Trajectories\\TrainingTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
         
-        results, sheets = ExcelFileManager.readAllSheets(filename)
+        results, sheets = ExcelFileManager.readExcelFile(filename)
         
         dataset = [[[] for x in range(13)] for y in range(len(sheets))] 
         

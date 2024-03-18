@@ -3,7 +3,7 @@ import os.path
 
 
 class ExcelFileManager:        
-    def readAllSheets(filename):
+    def readExcelFile(filename):
         if not os.path.isfile(filename):
             return None
         
@@ -17,7 +17,7 @@ class ExcelFileManager:
         
         return results, sheets
     
-    def saveFile(self,dataset, load, trajectoryType, trajectoryNumber):
+    def exportDataset(self,dataset, load, trajectoryType, trajectoryNumber):
         if trajectoryType:
             filename = ".\\DataBase\\Test trajectories\\TestTrajectory_" + str(trajectoryNumber) + "_Results.xlsx"
         else:

@@ -7,8 +7,8 @@ def sysCall_cleanup(sim,dataset,quadcopters_number,load,filename,trajectoryType,
     sim.stopSimulation(); # Stop and disconnect communication with CoppeliaSim
     print('Disconnected')
     print('Saving file')
-    excelFileManager.saveFile(dataset,load,trajectoryType,"11") # Save simulation data -------> IMPORTANT
-    graphVisualizer.plotData("11",load, saveGraph, trajectoryType)
+    excelFileManager.exportDataset(dataset,load,trajectoryType,"11") # Save simulation data -------> IMPORTANT
+    graphVisualizer.plotDataset("11",load, saveGraph, trajectoryType)
     print('Program ended') 
 
 def updateDataSet(quadcopters, dataset):
