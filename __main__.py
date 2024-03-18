@@ -1,51 +1,17 @@
+from coppeliasim_zmqremoteapi_client import RemoteAPIClient
 from Classes import Swarm
 import traceback
-import pandas as pd
-from Scripts import VisualizeGraphs
-from coppeliasim_zmqremoteapi_client import RemoteAPIClient
-
+from Utils import GraphVisualizer, ExcelFileManager
 
 def sysCall_cleanup(sim,dataset,quadcopters_number,load,filename,trajectoryType,saveGraph): 
     sim.stopSimulation(); # Stop and disconnect communication with CoppeliaSim
     print('Disconnected')
     print('Saving file')
-    saveFile(dataset,load,trajectoryType,"11") # Save simulation data -------> IMPORTANT 
-    VisualizeGraphs.plotData("11",load,saveGraph,trajectoryType)
+    excelFileManager.saveFile(dataset,load,trajectoryType,"11") # Save simulation data -------> IMPORTANT
+    graphVisualizer.plotData("11",load, saveGraph, trajectoryType)
     print('Program ended') 
 
-    
-def saveFile(dataset, load, trajectoryType, trajectoryNumber):
-    if trajectoryType:
-        filename = ".\\DataBase\\Test trajectories\\TestTrajectory_" + str(trajectoryNumber) + "_Results.xlsx"
-    else:
-        filename = ".\\DataBase\\Training trajectories\\TrainingTrajectory_" + str(trajectoryNumber) + "_Results.xlsx"
-
-    sheets = []
-
-    if not load:
-        writer = pd.ExcelWriter(filename, engine='openpyxl')  # Create the document or overwrite it
-
-    for i in range(4):  # Create a sheet for each drone
-        sheets.append({'t': dataset[i][9],
-                       'x': dataset[i][0], 'y': dataset[i][1], 'z': dataset[i][2],
-                       'target x': dataset[i][3], 'target y': dataset[i][4], 'target z': dataset[i][5],
-                       'betaE': dataset[i][6], 'alphaE': dataset[i][7], 'zE': dataset[i][8],
-                       'thrust': dataset[i][10], 'betaCorr': dataset[i][11], 'rotCorr': dataset[i][12],
-                       })
-        data = pd.DataFrame(sheets[i])  # Create a DataFrame
-        if not load:
-            data.to_excel(writer, sheet_name="wo - Drone " + str(i), index=False)  # Write data to the sheet
-        else:
-            with pd.ExcelWriter(filename, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
-                data.to_excel(writer, sheet_name="w - Drone " + str(i), index=False)  # Create the sheets or overwrite them
-
-    if not load:  # Close the writer if it was created
-        writer.close()
-
-
-
-
-def saveData(quadcopters, dataset):
+def updateDataSet(quadcopters, dataset):
     # Obtener los datos de posición, posición objetivo, errores, tiempo, empuje y correcciones de todos los drones
     data = zip(
         [quadcopter.pos[0] for quadcopter in quadcopters],  # Posición actual 
@@ -71,16 +37,21 @@ def saveData(quadcopters, dataset):
 # ------------------------------------------------------------------------------------------------------------------
 print('Program started\n')
 client = RemoteAPIClient(); # Start RemoteApp connection client
-
 sim = client.getObject('sim');  # Retrieve the object handle
 client.setStepping(True); # Activate staggered mode
 print('Connected\n')
 
 sim.startSimulation(); 
 client.step(); # One step in the simulation
-swarm = Swarm(sim,4)
+load = True # Indicates if the Coppelia simulation is with Load or without Load 
+trajectoryType = True # Training False, Test True 
+trajectoryNumber = "11"
+
+swarm = Swarm(sim,4,load,trajectoryType,trajectoryNumber)
 dataset = [[[] for x in range(13)] for y in range(swarm.size)] #Create the dataset with 13 positions for each drone
 
+graphVisualizer = GraphVisualizer(4)
+excelFileManager = ExcelFileManager()
 while (True):
     try:
         if swarm.quadcopters[0].t >= 240: # If the simulation has already reached 240 sec (4 mins), stop it
@@ -88,12 +59,12 @@ while (True):
             break
     
         swarm.update_simulation()
-        saveData(swarm.quadcopters,dataset); # Save the step data to the dataset
+        updateDataSet(swarm.quadcopters,dataset); # Save the step data to the dataset
 
         client.step();
 
     except: #If an exception occurs, end the program
-        sysCall_cleanup(sim,dataset,4,swarm.load,swarm.filename,swarm.trajectoryType,True)
+        sysCall_cleanup(sim,dataset,4,load,swarm.filename,trajectoryType,True)
         traceback.print_exc() # Print the exception message
         break
 

@@ -3,18 +3,17 @@ from Scripts.VisualizeGraphs import readAllSheets
 
 class Swarm: 
     
-    def __init__(self,sim,size):
+    def __init__(self,sim,size,load,trajectoryType,trajectoryNumber):
         self.size = size
-        self.sim = sim 
+        self.sim = sim
+        self.load = load
+        self.trajectoryType = trajectoryType
+        self.trajectoryNumber = trajectoryNumber
         self.quadcopters = []
         
 
         self.quadcopters = [Quadcopter(self.sim, f"Quadcopter[{drone}]") for drone in range(self.size)]
         self.delay = 16 # Number of delays of the prediction model
-        self.load = True # Indicates if the Coppelia simulation is with Load or without Load ------> !
-        
-        self.trajectoryType = True # Training False, Test True -----------------------------------> !
-        self.trajectoryNumber = "11" # ------------------------------------------------------------> !
 
         if self.trajectoryType:     
             self.filename = ".\\DataBase\\Test trajectories\\TestTrajectories.xlsx"    
