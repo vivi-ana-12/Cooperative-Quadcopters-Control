@@ -1,4 +1,4 @@
-from zmqRemoteApi import RemoteAPIClient
+from coppeliasim_zmqremoteapi_client import RemoteAPIClient
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -180,7 +180,7 @@ def saveFile(dataset,trajectoryNumber,quadcopters_number,predictionsError,initPo
         
         data.to_excel(writer, sheet_name="w - Drone "+str(i), index=False) 
         
-    writer.save()  
+    writer.close()  
 
 def saveControlError(predictionsError,trajectoryNumber,quadcopters_number,epoch):
     file = 'PredictionsErrorK.csv'

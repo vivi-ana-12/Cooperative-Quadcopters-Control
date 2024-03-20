@@ -1,5 +1,5 @@
 from coppeliasim_zmqremoteapi_client import RemoteAPIClient
-from Classes import Swarm
+from Core import Swarm
 import traceback
 from Utils import GraphVisualizer, ExcelFileManager
 
