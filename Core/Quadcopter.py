@@ -51,8 +51,6 @@ class Quadcopter:
         self.kI = []
         self.kD = []
 
-
-
     def get_parameters(self):
         self.pos,self.targetPos,self.l,self.sp,self.m,self.euler,self.vx,self.vy,self.t = self.sim.callScriptFunction('getParameters',self.scriptHandle,self.d,self.targetObj,self.heli);
         self.targetPos = np.array(self.targetPos)
