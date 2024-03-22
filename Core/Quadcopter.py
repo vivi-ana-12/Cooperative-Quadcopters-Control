@@ -2,26 +2,11 @@ import numpy as np
 
 class Quadcopter:
         
-    propellerHandles = []
-    jointHandles = []
-    particleObjects = [-1,-1,-1,-1]
     
     pParam=0.5
     iParam=0
     dParam=0
     vParam=-2
-
-    cumul=0
-    lastE=0
-    pAlphaE=0
-    pBetaE=0
-    psp2=0
-    psp1=0
-    
-    t = 0
-    e = 0
-
-    prevEuler=0
 
     Kpalpha = 0.1
     Kialpha = 0.002
@@ -36,6 +21,16 @@ class Quadcopter:
 
         self.heli = sim.getObject("/"+str(name))
         
+        self.propellerHandles = []
+        self.jointHandles = []
+        self.cumul=0
+        self.lastE=0
+        
+        self.pAlphaE=0
+        self.pBetaE=0
+        self.psp2=0
+        self.psp1=0
+
         for i in range(4):
             self.propellerHandles.append(sim.getObject('./propeller['+str(i)+']/respondable'))
             self.jointHandles.append(sim.getObject('./propeller['+str(i)+']/joint'))
@@ -50,6 +45,11 @@ class Quadcopter:
         self.kP = []
         self.kI = []
         self.kD = []
+        
+        
+        self.e = 0
+        self.prevEuler = 0
+
 
     def get_parameters(self):
         self.pos,self.targetPos,self.l,self.sp,self.m,self.euler,self.vx,self.vy,self.t = self.sim.callScriptFunction('getParameters',self.scriptHandle,self.d,self.targetObj,self.heli);

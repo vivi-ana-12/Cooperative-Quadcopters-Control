@@ -35,6 +35,8 @@ def updateDataSet(quadcopters, dataset):
             entry.append(value)
             
 # ------------------------------------------------------------------------------------------------------------------
+
+
 print('Program started\n')
 client = RemoteAPIClient(); # Start RemoteApp connection client
 sim = client.getObject('sim');  # Retrieve the object handle

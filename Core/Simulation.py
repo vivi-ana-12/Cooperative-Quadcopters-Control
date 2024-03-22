@@ -19,6 +19,6 @@
 
         
     
-#     def setObjectPosition(self, obj, world, position):
+#     def set_object_position(self, obj, world, position):
 #         # Define la posición del objeto en la simulación
 #         pass
