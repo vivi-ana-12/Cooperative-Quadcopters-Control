@@ -1,10 +1,12 @@
 import tensorflow as tf
 import pandas as pd
+import warnings
 
 class ANN:
     def __init__(self):
-        self.model = tf.keras.models.load_model("..\\models\\ANN_64-32-16-8 Fine-Tuning 2_16delays.h5") 
-        self.tfliteModelConfiguration()
+        self.model = tf.keras.models.load_model(".\\models\\ANN_64-32-16-8 Fine-Tuning 2_16delays.h5") 
+        warnings.filterwarnings('ignore', category=UserWarning, message='.*decay.*')
+        # self.tfliteModelConfiguration()
         
     def tfliteModelConfiguration(self):
         # Convert to TensorFlow Lite

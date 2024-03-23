@@ -1,8 +1,8 @@
+import tensorflow as tf
 import numpy as np
 
 class Quadcopter:
         
-    
     pParam=0.5
     iParam=0
     dParam=0
@@ -14,7 +14,7 @@ class Quadcopter:
     
     epoch = 0 
 
-    def __init__(self,sim,name):
+    def __init__(self,sim,name,delay,model):
         self.name = name
         self.targetObj = sim.getObject("/"+str(name)+'/target')
         self.d = sim.getObject("/"+str(name)+'/base')
@@ -46,9 +46,14 @@ class Quadcopter:
         self.kI = []
         self.kD = []
         
-        
+  
         self.e = 0
         self.prevEuler = 0
+        
+        self.delayedTrajectory = np.zeros((3, delay))
+        self.delayedPosition = np.zeros((3, delay))
+        
+        self.ANN_model = model
 
 
     def get_parameters(self):
@@ -78,35 +83,21 @@ class Quadcopter:
         # Rotational control:
         self.rotCorr = self.euler[2]*0.1+2*(self.euler[2]-self.prevEuler)
         self.prevEuler = self.euler[2]
-        
-    # def set_ANN_controller(self, positionError, dataset, du):
-
-    #     dy = np.array(dataset[:3])[:, -1]-np.array(dataset[:3])[:, -2]
-
-    #     for axis in range(2, 3):  # range(1):  # 2,3
-    #         self.kP[axis] = self.kP[axis] + self.Kpalpha * (positionError[axis][-1]**2) * (dy[axis]/du[axis] if du[axis] != 0 else 1)
-    #         if self.epoch >= 2:
-    #             self.kD[axis] = self.kD[axis] + self.Kdalpha * positionError[axis][-1] * (positionError[axis][-1] - positionError[axis][-2]) * (dy[axis]/du[axis] if du[axis] != 0 else 1)
-    #         if self.epoch >= 4:
-    #             self.kI[axis] = self.kI[axis] + positionError[axis][-1] * (self.Kialpha * np.sum(np.array(positionError[axis][-4:]))) * positionError[axis][-1] * (dy[axis]/du[axis] if du[axis] != 0 else 1)
-
-    #     self.epoch = self.epoch + 1
-    
-    def set_ANN_controller(self,positionError,dataset):
-        
-        # dy = np.array(dataset[:3])[:, -1]-np.array(dataset[:3])[:, -2]
-        # du = np.array(dataset[4:7])[:,-1]-np.array(dataset[4:7])[:, -2]
-        
-        for axis in range (2,3): 
-           # self.kP[axis] = self.kP[axis] + self.Kpalpha * (positionError[axis][-1]**2) * (dy[axis]/du[axis] if du[axis] != 0 else 1)
-
-            self.kP[axis] = self.kP[axis] + self.Kpalpha * (positionError[axis][-1])
-            if self.epoch >= 2:
-                self.kD[axis] = self.kD[axis] + self.Kdalpha*(positionError[axis][-1]-positionError[axis][-2])
-            if self.epoch >= 4: 
-                self.kI[axis] = self.kI[axis] + (self.Kialpha*(positionError[axis][-1]+positionError[axis][-2]+positionError[axis][-3]+positionError[axis][-4]))
-        
-        self.epoch = self.epoch + 1
 
     def set_velocities(self):
         self.sim.callScriptFunction('setVelocities',self.scriptHandle,self.thrust,self.alphaCorr,self.betaCorr,self.rotCorr)
+        
+    # def predict_unloaded_behavior(self):
+    #     self.update_input_features(actualInputTrajectory, lastPrediction)
+        
+    def create_input_features(self, actualInputTrajectory, lastPrediction):
+        self.update_delay_array(self.delayedTrajectory, actualInputTrajectory)
+        self.update_delay_array(self.delayedPosition, lastPrediction)
+        
+        self.input_features = np.concatenate((self.delayedTrajectory, self.delayedPosition), axis=1)
+        
+    def update_delay_array(self, array, new_value):
+        self.array[:, :-1] = self.array[:, 1:]
+        self.array[:, -1] = new_value
+        return array
+        

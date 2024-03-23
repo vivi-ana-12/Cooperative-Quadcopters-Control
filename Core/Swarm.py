@@ -1,5 +1,6 @@
-from .Quadcopter import Quadcopter
 from Scripts.VisualizeGraphs import readAllSheets
+from .Quadcopter import Quadcopter
+from .ANN import ANN
 
 class Swarm: 
     
@@ -10,10 +11,11 @@ class Swarm:
         self.trajectoryType = trajectoryType
         self.trajectoryNumber = trajectoryNumber
         self.quadcopters = []
-        
-
-        self.quadcopters = [Quadcopter(self.sim, f"Quadcopter[{drone}]") for drone in range(self.size)]
+        self.unloadedModel = ANN()
         self.delay = 16 # Number of delays of the prediction model
+        self.quadcopters = [Quadcopter(self.sim, f"Quadcopter[{drone}]",self.delay,self.unloadedModel) for drone in range(self.size)]
+        self.dataset = [[[] for x in range(13)] for y in range(self.size)] #Create the dataset with 13 positions for each drone
+
 
         if self.trajectoryType:     
             self.filename = ".\\DataBase\\Test trajectories\\TestTrajectories.xlsx"    
@@ -26,6 +28,7 @@ class Swarm:
 
         self.update_simulation()
         self.save_initial_positions()
+        
 
 
     def save_initial_positions(self):
@@ -50,3 +53,26 @@ class Swarm:
             
             self.sim.setObjectPosition(self.quadcopters[quadcopter].targetObj,self.sim.handle_world,[self.quadcopters[quadcopter].targetPos[0],self.quadcopters[quadcopter].targetPos[1],self.quadcopters[quadcopter].targetPos[2]])
 
+        
+    def updateDataSet(self):
+        data = zip(
+            [quadcopter.pos[0] for quadcopter in self.quadcopters],  # Posición actual 
+            [quadcopter.pos[1] for quadcopter in self.quadcopters],  # Posición actual
+            [quadcopter.pos[2] for quadcopter in self.quadcopters],  # Posición actual
+            [quadcopter.targetPos[0] for quadcopter in self.quadcopters],  # Posición objetivo
+            [quadcopter.targetPos[1] for quadcopter in self.quadcopters],  # Posición objetivo
+            [quadcopter.targetPos[2] for quadcopter in self.quadcopters],  # Posición objetivo
+            [quadcopter.betaE for quadcopter in self.quadcopters],  # Error en x
+            [quadcopter.alphaE for quadcopter in self.quadcopters],  # Error en y
+            [quadcopter.e for quadcopter in self.quadcopters],  # Error en z
+            [quadcopter.t for quadcopter in self.quadcopters],  # Tiempo
+            [quadcopter.thrust for quadcopter in self.quadcopters],  # Empuje
+            [quadcopter.betaCorr for quadcopter in self.quadcopters],  # Corrección beta
+            [quadcopter.rotCorr for quadcopter in self.quadcopters]  # Corrección rot
+        )
+    
+        for drone_data, dataset_entry in zip(data, self.dataset):
+            for value, entry in zip(drone_data, dataset_entry):
+                entry.append(value)
+            
+            
