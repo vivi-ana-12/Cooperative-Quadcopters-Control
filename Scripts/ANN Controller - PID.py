@@ -1,4 +1,4 @@
-from coppeliasim_zmqremoteapi_client import RemoteAPIClient
+from zmqRemoteApi import RemoteAPIClient
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -14,7 +14,7 @@ import Quadcopter
 
 def sysCall_cleanup(sim,dataset,trajectoryNumber,quadcopters_number,allPredictions,predictionsError,controlError,epoch): 
     sim.stopSimulation() # Stop and disconnect communication with CoppeliaSim
-    # print('Disconnected')
+    print('Disconnected')
     # print('Program ended') 
     # print('Saving file')
     # saveFile(dataset,trajectoryNumber,quadcopters_number,predictionsError,initPos,allPredictions,epoch)# Save a file with the simulation data
@@ -180,7 +180,7 @@ def saveFile(dataset,trajectoryNumber,quadcopters_number,predictionsError,initPo
         
         data.to_excel(writer, sheet_name="w - Drone "+str(i), index=False) 
         
-    writer.close()  
+    writer.save()  
 
 def saveControlError(predictionsError,trajectoryNumber,quadcopters_number,epoch):
     file = 'PredictionsErrorK.csv'

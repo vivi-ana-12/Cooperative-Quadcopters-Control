@@ -1,4 +1,4 @@
-import tensorflow as tf
+import pandas as pd
 import numpy as np
 
 class Quadcopter:
@@ -50,10 +50,21 @@ class Quadcopter:
         self.e = 0
         self.prevEuler = 0
         
-        self.delayedTrajectory = np.zeros((3, delay))
-        self.delayedPosition = np.zeros((3, delay))
         
         self.ANN_model = model
+        
+        self.unloaded_behavior_predictions = pd.DataFrame()
+        
+        self.delayedTrajectory = pd.DataFrame(np.zeros((17, 3)), columns=['x', 'y', 'z'])
+        self.actualInputTrajectory = pd.DataFrame(np.zeros((17, 3)), columns=['x', 'y', 'z'])
+        self.trajectory = []
+
+        
+    def set_initial_state(self):
+        self.initPos = self.targetPos.copy()
+        self.ownFramePos = [ 0.738 - self.pos[0],
+                            -0.755 - self.pos[1],
+                            1.6505 - self.pos[2]]
 
 
     def get_parameters(self):
@@ -87,17 +98,33 @@ class Quadcopter:
     def set_velocities(self):
         self.sim.callScriptFunction('setVelocities',self.scriptHandle,self.thrust,self.alphaCorr,self.betaCorr,self.rotCorr)
         
-    # def predict_unloaded_behavior(self):
-    #     self.update_input_features(actualInputTrajectory, lastPrediction)
+    def predict_unloaded_behavior(self):
         
-    def create_input_features(self, actualInputTrajectory, lastPrediction):
-        self.update_delay_array(self.delayedTrajectory, actualInputTrajectory)
-        self.update_delay_array(self.delayedPosition, lastPrediction)
+        input_features = self.create_input_features()
+        self.lastPrediction = self.ANN_model.predict(input_features)
+        self.unloaded_behavior_predictions = pd.concat([self.unloaded_behavior_predictions,self.lastPrediction - self.ownFramePos], ignore_index=True,sort = False)
+
+    def initialize_delayed_arrays(self,iteration):
+        if iteration < 17*2:
+            self.update_delay_array(self.delayedTrajectory,np.array(self.pos)+np.array(self.ownFramePos))
+        if iteration <= 17*2 and iteration != 0:
+            self.update_delay_array(self.actualInputTrajectory,np.array(self.targetPos)+np.array(self.ownFramePos))
+
+    def update_delayed_arrays(self):
+        self.update_delay_array(self.delayedTrajectory,self.lastPrediction.values.tolist()[0])
+        self.update_delay_array(self.actualInputTrajectory,np.array(self.targetPos)+np.array(self.ownFramePos))
         
-        self.input_features = np.concatenate((self.delayedTrajectory, self.delayedPosition), axis=1)
+
+    def create_input_features(self):
+        concatenated = pd.concat([self.actualInputTrajectory['x'], self.actualInputTrajectory['y'], self.actualInputTrajectory['z'],
+                                  self.delayedTrajectory['x'], self.delayedTrajectory['y'], self.delayedTrajectory['z']])
+                
+        input_features = np.expand_dims(concatenated.values.flatten(), axis=0)
         
-    def update_delay_array(self, array, new_value):
-        self.array[:, :-1] = self.array[:, 1:]
-        self.array[:, -1] = new_value
-        return array
+        return input_features
         
+    def update_delay_array(self, array, newData):
+        array.iloc[1:, :] = array.iloc[:-1,:].values
+        array.loc[0] = newData
+                
+        return array        
