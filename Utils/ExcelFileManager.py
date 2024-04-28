@@ -23,10 +23,10 @@ class ExcelFileManager:
         else:
             filename = ".\\DataBase\\Training trajectories\\TrainingTrajectory_" + str(trajectoryNumber) + "_Results.xlsx"
     
-        sheets = []
-    
         if not load:
             writer = pd.ExcelWriter(filename, engine='openpyxl')  # Create the document or overwrite it
+
+        sheets = []
     
         for i in range(4):  # Create a sheet for each drone
             sheets.append({'t': dataset[i][9],

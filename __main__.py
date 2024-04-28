@@ -9,5 +9,5 @@ load = True # Indicates if the Coppelia simulation is with Load or without Load
 trajectoryType = True # Training False, Test True 
 trajectoryNumber = "1"
 
-simulationMode = SIMPLE_SIMULATION
+simulationMode = SIMULATION_WITH_OPTIMIZER
 simulation = Simulation(simulationMode,trajectoryType,trajectoryNumber,load)

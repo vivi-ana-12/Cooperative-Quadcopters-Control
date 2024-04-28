@@ -50,9 +50,10 @@ class Simulation:
         self.sim.stopSimulation(); # Stop and disconnect communication with CoppeliaSim
         print('Disconnected')
         print('Saving file')
+
         if self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION: 
             self.excelFileManager.exportCompleteDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber,self.allPredictions)
-            self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber,self.swarm.load, True, self.swarm.trajectoryType)
+            self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
 
         elif self.simulationMode == SIMPLE_SIMULATION:
             self.excelFileManager.exportSimpleDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber)
@@ -91,8 +92,7 @@ class Simulation:
                     if self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION:
                         for quadcopter in range (4):
                             quad_data = [[0]*17 + self.swarm.quadcopters[quadcopter].unloaded_behavior_predictions[col].tolist() for col in self.swarm.quadcopters[quadcopter].unloaded_behavior_predictions.columns]
-                            self.allPredictions.append(quad_data)
-                            
+                            self.allPredictions.append(quad_data)                            
                     self.sysCall_cleanup()
                     break
             

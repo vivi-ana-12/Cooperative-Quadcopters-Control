@@ -99,12 +99,11 @@ class GraphVisualizer:
                 plt.savefig(".\\Graphs\\Test trajectories\\TestTrajectory"+str(trajectoryNumber)+"_"+str(suffix)+".pdf")
             else: 
                 plt.savefig(".\\Graphs\\Training trajectories\\TrainingTrajectory"+str(trajectoryNumber)+"_"+str(suffix)+".pdf")
-        
-        
-    def plotCompleteDataset(self, trajectoryNumber,load,saveGraph,trajectoryType):
 
-        quadcopters_number = 4
+
+    def plotCompleteDataset(self, trajectoryNumber,saveGraph,trajectoryType):
         delay = 16
+        quadcopters_number = 4
         filename_test2 = ".\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    
         filename_Test = ".\\DataBase\\Test Results\\Test_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"
 
@@ -174,3 +173,4 @@ class GraphVisualizer:
         plt.savefig(".\\Graphs\\Test Results\\Trajectory "+str(trajectoryNumber)+"_W.pdf")
 
         plt.close('all')  #Close all open figures
+
