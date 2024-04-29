@@ -15,14 +15,14 @@ import Quadcopter
 def sysCall_cleanup(sim,dataset,trajectoryNumber,quadcopters_number,allPredictions,predictionsError,controlError,epoch): 
     sim.stopSimulation() # Stop and disconnect communication with CoppeliaSim
     print('Disconnected')
-    # print('Program ended') 
-    # print('Saving file')
-    # saveFile(dataset,trajectoryNumber,quadcopters_number,predictionsError,initPos,allPredictions,epoch)# Save a file with the simulation data
-    # saveControlError(predictionsError,trajectoryNumber,quadcopters_number,epoch) # Save a file with the error data for K correction.
-    # saveK(dataset,trajectoryNumber,quadcopters_number,epoch)
-    # print('Ploting data')
-    # plotData(trajectoryNumber,quadcopters_number,delay,epoch) # Generates the graphs taking the data from the file
-    # plotControlData(trajectoryNumber)
+    print('Program ended') 
+    print('Saving file')
+    saveFile(dataset,trajectoryNumber,quadcopters_number,predictionsError,initPos,allPredictions,epoch)# Save a file with the simulation data
+    saveControlError(predictionsError,trajectoryNumber,quadcopters_number,epoch) # Save a file with the error data for K correction.
+    saveK(dataset,trajectoryNumber,quadcopters_number,epoch)
+    print('Ploting data')
+    plotData(trajectoryNumber,quadcopters_number,delay,epoch) # Generates the graphs taking the data from the file
+    plotControlData(trajectoryNumber)
 
 def plotData(trajectoryNumber,quadcopters_number,delay,epoch):
     filename_test2 = ".\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    
