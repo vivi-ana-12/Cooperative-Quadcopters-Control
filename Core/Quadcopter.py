@@ -124,7 +124,7 @@ class Quadcopter:
         return input_features
     
     def calculate_loaded_position_error(self):
-        self.last_loaded_position_error = self.lastPrediction - self.pos
+        self.last_loaded_position_error = (self.lastPrediction - self.ownFramePos) - self.pos
         self.loaded_position_errors = pd.concat([self.loaded_position_errors,self.last_loaded_position_error], ignore_index=True,sort = False)
 
     def update_delay_array(self, array, newData):

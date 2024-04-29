@@ -15,7 +15,6 @@ SIMULATION_MODES = {
     COMPLETE_SIMULATION: "complete simulation: optimizer controller for each drone, trajectory from swarm consensus (graphs)."
 }
 
-
 class Simulation:
     def __init__(self, simulationMode,trajectoryType = True, trajectoryNumber = '1', load = True):
         
@@ -44,19 +43,22 @@ class Simulation:
         self.dataset = [[[] for x in range(13)] for y in range(self.swarm.size)] #Create the dataset with 13 positions for each drone
 
         self.iteration = 0
-        self.run_simulation();
+        self.run_simulation()
 
     def sysCall_cleanup(self): 
         self.sim.stopSimulation(); # Stop and disconnect communication with CoppeliaSim
         print('Disconnected')
-        print('Saving file')
 
         if self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION: 
+            print('Saving file')
             self.excelFileManager.exportCompleteDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber,self.allPredictions, self.allPositionErrors)
-            # self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
+            print('Saving graph')
+            self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
 
         elif self.simulationMode == SIMPLE_SIMULATION:
+            print('Saving file')
             self.excelFileManager.exportSimpleDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber)
+            print('Saving graph')
             self.graphVisualizer.plotSimpleDataset(self.swarm.trajectoryNumber,self.swarm.load, True, self.swarm.trajectoryType)
 
         print('Program ended') 
@@ -64,8 +66,6 @@ class Simulation:
     
     def update_dataSet(self):
                 
-
-
         data = zip(
             [quadcopter.pos[0] for quadcopter in self.swarm.quadcopters],         # Posición actual x
             [quadcopter.pos[1] for quadcopter in self.swarm.quadcopters],         # Posición actual y

@@ -139,11 +139,11 @@ class GraphVisualizer:
             for drone in range (quadcopters_number): #Columns
                 if(variable < 3): # In the first 3 rows print the target, simulation and prediction data for each axis (x,y and z)
                     ax[variable, drone].plot(dataset[drone][0],dataset[drone][variable+4],"g")
-                    ax[variable, drone].plot(dataset[drone][0],dataset[drone][variable+7],"b",linestyle = '--')
+                    ax[variable, drone].plot(dataset[drone][0][delay+2:],dataset[drone][variable+7][delay+2:],"b",linestyle = '--')
                     ax[variable, drone].plot(dataset[drone][0],dataset[drone][variable+1],"r")
             
                 else: # In the next 3 rows print the error of each axis
-                    ax[variable, drone].plot(dataset[drone][0][delay+2:],dataset[drone][variable+7][0:-delay-2],"r")
+                    ax[variable, drone].plot(dataset[drone][0][delay+2:],dataset[drone][variable+7][delay+2:],"r")
                     ax[variable, drone].plot(dataset[drone][0][delay+2:],dataset_test2[drone][variable+7][0:-delay-2],'c',linestyle = '--')
                     
                 if (image <= quadcopters_number ): # Print the drone number in each column
