@@ -31,7 +31,6 @@ class Swarm:
         for quadcopter in range (self.size):
             self.quadcopters[quadcopter].set_initial_state()
 
-            
     def update_simulation(self):
         for quadcopter in range(self.size):
             self.quadcopters[quadcopter].get_parameters()
@@ -61,6 +60,7 @@ class Swarm:
             self.update_predictions_inputs(iteration,quadcopter)
             if iteration >= (16+1)*2:
                 self.quadcopters[quadcopter].predict_unloaded_behavior()
+                self.quadcopters[quadcopter].calculate_loaded_position_error()
 
 
         
