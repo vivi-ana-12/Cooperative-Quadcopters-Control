@@ -54,7 +54,8 @@ class Quadcopter:
         self.ANN_model = model
         
         self.unloaded_behavior_predictions = pd.DataFrame()
-        
+        self.loaded_position_errors = pd.DataFrame()
+
         self.delayedTrajectory = pd.DataFrame(np.zeros((17, 3)), columns=['x', 'y', 'z'])
         self.actualInputTrajectory = pd.DataFrame(np.zeros((17, 3)), columns=['x', 'y', 'z'])
         self.trajectory = []
@@ -99,7 +100,6 @@ class Quadcopter:
         self.sim.callScriptFunction('setVelocities',self.scriptHandle,self.thrust,self.alphaCorr,self.betaCorr,self.rotCorr)
         
     def predict_unloaded_behavior(self):
-        
         input_features = self.create_input_features()
         self.lastPrediction = self.ANN_model.predict(input_features)
         self.unloaded_behavior_predictions = pd.concat([self.unloaded_behavior_predictions,self.lastPrediction - self.ownFramePos], ignore_index=True,sort = False)
@@ -122,7 +122,11 @@ class Quadcopter:
         input_features = np.expand_dims(concatenated.values.flatten(), axis=0)
         
         return input_features
-        
+    
+    def calculate_loaded_position_error(self):
+        self.last_loaded_position_error = self.lastPrediction - self.pos
+        self.loaded_position_errors = pd.concat([self.loaded_position_errors,self.last_loaded_position_error], ignore_index=True,sort = False)
+
     def update_delay_array(self, array, newData):
         array.iloc[1:, :] = array.iloc[:-1,:].values
         array.loc[0] = newData
