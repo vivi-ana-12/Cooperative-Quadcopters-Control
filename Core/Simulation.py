@@ -52,8 +52,8 @@ class Simulation:
         print('Saving file')
 
         if self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION: 
-            self.excelFileManager.exportCompleteDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber,self.allPredictions)
-            self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
+            self.excelFileManager.exportCompleteDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber,self.allPredictions, self.allPositionErrors)
+            # self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
 
         elif self.simulationMode == SIMPLE_SIMULATION:
             self.excelFileManager.exportSimpleDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber)
@@ -63,6 +63,9 @@ class Simulation:
     
     
     def update_dataSet(self):
+                
+
+
         data = zip(
             [quadcopter.pos[0] for quadcopter in self.swarm.quadcopters],         # Posición actual x
             [quadcopter.pos[1] for quadcopter in self.swarm.quadcopters],         # Posición actual y
@@ -76,7 +79,7 @@ class Simulation:
             [quadcopter.t for quadcopter in self.swarm.quadcopters],              # Tiempo
             [quadcopter.thrust for quadcopter in self.swarm.quadcopters],         # Empuje
             [quadcopter.betaCorr for quadcopter in self.swarm.quadcopters],       # Corrección beta
-            [quadcopter.rotCorr for quadcopter in self.swarm.quadcopters]         # Corrección rot
+            [quadcopter.rotCorr for quadcopter in self.swarm.quadcopters],        # Corrección rot
         )
     
         for drone_data, dataset_entry in zip(data, self.dataset):
@@ -85,14 +88,15 @@ class Simulation:
                 
     def run_simulation(self):
         self.allPredictions = []
+        self.allPositionErrors = []
 
         while (True):
             try:
                 if self.swarm.quadcopters[0].t >= 240: # If the simulation has already reached 240 sec (4 mins), stop it
                     if self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION:
                         for quadcopter in range (4):
-                            quad_data = [[0]*17 + self.swarm.quadcopters[quadcopter].unloaded_behavior_predictions[col].tolist() for col in self.swarm.quadcopters[quadcopter].unloaded_behavior_predictions.columns]
-                            self.allPredictions.append(quad_data)                            
+                            self.allPredictions.append([[0]*17 + self.swarm.quadcopters[quadcopter].unloaded_behavior_predictions[col].tolist() for col in self.swarm.quadcopters[quadcopter].unloaded_behavior_predictions.columns])
+                            self.allPositionErrors.append([[0]*17 + self.swarm.quadcopters[quadcopter].loaded_position_errors[col].tolist() for col in self.swarm.quadcopters[quadcopter].loaded_position_errors.columns])
                     self.sysCall_cleanup()
                     break
             

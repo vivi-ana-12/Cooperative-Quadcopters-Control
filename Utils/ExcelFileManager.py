@@ -45,7 +45,7 @@ class ExcelFileManager:
         if not load:  # Close the writer if it was created
             writer.close()
             
-    def exportCompleteDataset(self,dataset, load, trajectoryType, trajectoryNumber, allPredictions):
+    def exportCompleteDataset(self,dataset, load, trajectoryType, trajectoryNumber, allPredictions, allPositionErrors):
 
         sheets = []
 
@@ -57,6 +57,7 @@ class ExcelFileManager:
             Columns = {'t':dataset[i][9],'x':dataset[i][0],'y':dataset[i][1],'z':dataset[i][2],
                           'target x':dataset[i][3],'target y':dataset[i][4],'target z':dataset[i][5],
                           'prediction x': allPredictions[i][0], 'prediction y': allPredictions[i][1],'prediction z': allPredictions[i][2],
+                          'predictionE x': allPositionErrors[i][0], 'predictionE y': allPositionErrors[i][1],'predictionE z': allPositionErrors[i][2],
                           'betaE':dataset[i][6],'alphaE':dataset[i][7],'zE':dataset[i][8],
                           'thrust':dataset[i][10],'betaCorr':dataset[i][11],'rotCorr':dataset[i][12]}
             
