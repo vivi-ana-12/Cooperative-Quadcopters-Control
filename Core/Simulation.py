@@ -17,7 +17,6 @@ SIMULATION_MODES = {
 
 class Simulation:
     def __init__(self, simulationMode,trajectoryType = True, trajectoryNumber = '1', load = True):
-        
         self.simulationMode = simulationMode
         message = SIMULATION_MODES.get(self.simulationMode)
         if message is None:
@@ -39,7 +38,7 @@ class Simulation:
         print('Simulation started\n')
         self.sim.startSimulation();
         self.client.step();
-        self.swarm = Swarm(self.sim,4,load,trajectoryType,trajectoryNumber)
+        self.swarm = Swarm(self.sim,4,load,trajectoryType,trajectoryNumber,self.simulationMode)
         self.dataset = [[[] for x in range(13)] for y in range(self.swarm.size)] #Create the dataset with 13 positions for each drone
 
         self.iteration = 0
@@ -55,7 +54,7 @@ class Simulation:
             print('Saving graph')
             self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
 
-        elif self.simulationMode == SIMPLE_SIMULATION:
+        elif self.simulationMode == SIMPLE_SIMULATION or self.simulationMode ==SIMULATION_WITH_COOPERATIVE_TRAJECTORY:
             print('Saving file')
             self.excelFileManager.exportSimpleDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber)
             print('Saving graph')
@@ -106,7 +105,7 @@ class Simulation:
                     self.update_dataSet(); # Save the step data to the dataset
                     self.swarm.predict_quadcopters_behavior(self.iteration)
                 
-                if self.simulationMode == SIMPLE_SIMULATION:
+                if self.simulationMode == SIMPLE_SIMULATION or self.simulationMode == SIMULATION_WITH_COOPERATIVE_TRAJECTORY:
                     self.update_dataSet(); # Save the step data to the dataset
 
                 self.iteration = self.iteration + 1
