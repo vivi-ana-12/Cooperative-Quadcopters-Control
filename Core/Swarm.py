@@ -72,13 +72,8 @@ class Swarm:
             self.calculatedPositions = self.cooperativeMultiAgentGraph.calculatePosition(target)
         self.quadcopters[quadcopter].targetPos = self.calculatedPositions[:, quadcopter]
 
-        # self.quadcopters[quadcopter].targetPos = self.cooperativeMultiAgentGraph.calculatePosition(self.quadcopters[0].targetPos)
-
-        # print('ESTO ES LO QUE ESTÁ IMPRIMIENDO',self.cooperativeMultiAgentGraph.calculatePosition(self.quadcopters[0].targetPos))
-        # print(self.quadcopters[quadcopter].targetPos)
     def update_trajectory_from_file(self,quadcopter):
         self.quadcopters[quadcopter].targetPos = (self.quadcopters[quadcopter].initPos + self.trajectory.iloc[int(round(self.quadcopters[0].t-1)), [0, 1, 2]]).tolist()
-        # print(self.quadcopters[quadcopter].targetPos)
         
     def update_predictions_inputs(self,iteration,quadcopter):
         if iteration <= (16+1)*2:
@@ -103,37 +98,19 @@ class Swarm:
     def get_relative_initial_distances(self):
         
         positions = np.array(self.initialPosition)
-        # print(positions)
-
         relations = np.array([[1.,1.,1.,1.],[0.,0.,0.,0.],[0.,0.,0.,0.],[0.,0.,0.,0.]])
-
         dot_product = np.dot(positions, relations)
-        # print(dot_product)
         distances = positions - dot_product
-        # print(distances)
-        # print("="*60)
         diagonal = np.array([np.diag(distances[0]),np.diag(distances[1]),np.diag(distances[2])])
-        mask = np.array(
-            [[[1,0,0,0],
-              [1,0,0,0],
-              [1,0,0,0],
-              [1,0,0,0]],
-                      
-              [[1,0,0,0],
-              [1,0,0,0],
-              [1,0,0,0],
-              [1,0,0,0]],
-              
-              [[1,0,0,0],
-              [1,0,0,0],
-              [1,0,0,0],
-              [1,0,0,0]]])
-        # print(diagonal)
+        m, n = relations.shape   
+        mask = np.zeros((3, m, n), dtype=int)
 
-        
+        for axis in range(3):
+            for i in range(n):
+                mask[axis, :, i] = relations[i]
+    
         self.relativeDistances = np.array([np.dot(diagonal[0],mask[0]), np.dot(diagonal[1],mask[1]), np.dot(diagonal[2],mask[2])])
-        print(self.relativeDistances)
-        print("="*60)
+
             
 
         
