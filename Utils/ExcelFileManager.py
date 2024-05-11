@@ -18,6 +18,7 @@ class ExcelFileManager:
         return results, sheets
     
     def exportSimpleDataset(self,dataset, load, trajectoryType, trajectoryNumber):
+        print('Saving file')
         if trajectoryType:
             filename = ".\\DataBase\\Test trajectories\\TestTrajectory_" + str(trajectoryNumber) + "_Results.xlsx"
         else:
@@ -46,7 +47,7 @@ class ExcelFileManager:
             writer.close()
             
     def exportCompleteDataset(self,dataset, load, trajectoryType, trajectoryNumber, allPredictions, allPositionErrors):
-
+        print('Saving file')
         sheets = []
 
         filename = ".\\DataBase\\Test Results\\Test_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"
