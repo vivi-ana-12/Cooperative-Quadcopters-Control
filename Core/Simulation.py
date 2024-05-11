@@ -47,21 +47,18 @@ class Simulation:
     def sysCall_cleanup(self): 
         self.sim.stopSimulation(); # Stop and disconnect communication with CoppeliaSim
         print('Disconnected')
-
-        if self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION: 
-            print('Saving file')
-            self.excelFileManager.exportCompleteDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber,self.allPredictions, self.allPositionErrors)
-            print('Saving graph')
+        
+        if self.simulationMode in [SIMULATION_WITH_OPTIMIZER, COMPLETE_SIMULATION]:
+            
+            self.excelFileManager.exportCompleteDataset(self.dataset, self.swarm.load, self.swarm.trajectoryType,self.swarm.trajectoryNumber, self.allPredictions, self.allPositionErrors)
             self.graphVisualizer.plotCompleteDataset(self.swarm.trajectoryNumber, True, self.swarm.trajectoryType)
-
-        elif self.simulationMode == SIMPLE_SIMULATION or self.simulationMode ==SIMULATION_WITH_COOPERATIVE_TRAJECTORY:
-            print('Saving file')
-            self.excelFileManager.exportSimpleDataset(self.dataset,self.swarm.load,self.swarm.trajectoryType,self.swarm.trajectoryNumber)
-            print('Saving graph')
-            self.graphVisualizer.plotSimpleDataset(self.swarm.trajectoryNumber,self.swarm.load, True, self.swarm.trajectoryType)
+        
+        elif self.simulationMode in [SIMPLE_SIMULATION, SIMULATION_WITH_COOPERATIVE_TRAJECTORY]:
+            
+            self.excelFileManager.exportSimpleDataset(self.dataset, self.swarm.load, self.swarm.trajectoryType,self.swarm.trajectoryNumber)
+            self.graphVisualizer.plotSimpleDataset(self.swarm.trajectoryNumber, self.swarm.load, True, self.swarm.trajectoryType)
 
         print('Program ended') 
-    
     
     def update_dataSet(self):
                 
@@ -99,11 +96,11 @@ class Simulation:
                     self.sysCall_cleanup()
                     break
             
-                self.swarm.update_simulation()
+                self.swarm.update_simulation(self.iteration)
 
                 if self.iteration%2 == 0 and (self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == COMPLETE_SIMULATION) :
                     self.update_dataSet(); # Save the step data to the dataset
-                    self.swarm.predict_quadcopters_behavior(self.iteration)
+                    # self.swarm.predict_quadcopters_behavior(self.iteration)
                 
                 if self.simulationMode == SIMPLE_SIMULATION or self.simulationMode == SIMULATION_WITH_COOPERATIVE_TRAJECTORY:
                     self.update_dataSet(); # Save the step data to the dataset

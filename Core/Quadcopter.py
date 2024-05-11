@@ -8,9 +8,9 @@ class Quadcopter:
     dParam=0
     vParam=-2
 
-    Kpalpha = 0.1
-    Kialpha = 0.002
-    Kdalpha = 0.002
+    Kpalpha = 1
+    Kialpha = 0.1
+    Kdalpha = 0.01
     
     epoch = 0 
 
@@ -42,9 +42,9 @@ class Quadcopter:
 
         self.sim.setObjectParent(self.targetObj,-1,True)
         
-        self.kP = []
-        self.kI = []
-        self.kD = []
+        self.kP = np.ones(3)*1.01
+        self.kI = np.ones(3)*0.65
+        self.kD = np.ones(3)*0.05
         
   
         self.e = 0
@@ -59,6 +59,11 @@ class Quadcopter:
         self.delayedTrajectory = pd.DataFrame(np.zeros((17, 3)), columns=['x', 'y', 'z'])
         self.actualInputTrajectory = pd.DataFrame(np.zeros((17, 3)), columns=['x', 'y', 'z'])
         self.trajectory = []
+        # self.lastCosts = np.zeros((4,3))
+        # self.errors = np.zeros((5,3))
+        # self.gradientCounter = 0
+        self.derivadas = np.zeros((3,3))
+
 
         
     def set_initial_state(self):
@@ -67,6 +72,7 @@ class Quadcopter:
                             -0.755 - self.pos[1],
                             1.6505 - self.pos[2]]
 
+        self.trajectory = self.targetPos
 
     def get_parameters(self):
         self.pos,self.targetPos,self.l,self.sp,self.m,self.euler,self.vx,self.vy,self.t = self.sim.callScriptFunction('getParameters',self.scriptHandle,self.d,self.targetObj,self.heli);
@@ -108,22 +114,27 @@ class Quadcopter:
         if iteration < 17*2:
             self.update_delay_array(self.delayedTrajectory,np.array(self.pos)+np.array(self.ownFramePos))
         if iteration <= 17*2 and iteration != 0:
-            self.update_delay_array(self.actualInputTrajectory,np.array(self.targetPos)+np.array(self.ownFramePos))
+            self.update_delay_array(self.actualInputTrajectory,np.array(self.trajectory)+np.array(self.ownFramePos))
 
     def update_delayed_arrays(self):
         self.update_delay_array(self.delayedTrajectory,self.lastPrediction.values.tolist()[0])
-        self.update_delay_array(self.actualInputTrajectory,np.array(self.targetPos)+np.array(self.ownFramePos))
+        self.update_delay_array(self.actualInputTrajectory,np.array(self.trajectory)+np.array(self.ownFramePos))
         
 
     def create_input_features(self):
         concatenated = pd.concat([self.actualInputTrajectory['x'], self.actualInputTrajectory['y'], self.actualInputTrajectory['z'],
                                   self.delayedTrajectory['x'], self.delayedTrajectory['y'], self.delayedTrajectory['z']])
-                
+        
         input_features = np.expand_dims(concatenated.values.flatten(), axis=0)
         
         return input_features
     
     def calculate_loaded_position_error(self):
+        # print("="*60)
+        # print("POS: ", self.pos)
+        # print("Traj: ", self.trajectory)
+        # print("Prediction: ", (self.lastPrediction - self.ownFramePos).to_numpy())
+        # print("Error: ", (self.lastPrediction - self.ownFramePos).to_numpy()[0] - self.pos) 
         self.last_loaded_position_error = (self.lastPrediction - self.ownFramePos) - self.pos
         self.loaded_position_errors = pd.concat([self.loaded_position_errors,self.last_loaded_position_error], ignore_index=True,sort = False)
 
@@ -132,3 +143,41 @@ class Quadcopter:
         array.loc[0] = newData
                 
         return array        
+    
+    #TODO: Refactor this:
+    # Función de costo (Error cuadrático medio)
+    # def cost(self):
+    #     return np.mean(self.loaded_position_errors.to_numpy()[-60:]**2, axis=0)
+    
+    def gradient_descent(self, iteration):
+        
+        if(len(self.unloaded_behavior_predictions.to_numpy()) > 1):
+            self.derivadas[0] += self.last_loaded_position_error * self.unloaded_behavior_predictions.to_numpy()[-1,:]
+
+            self.derivadas[1] += np.sum(self.loaded_position_errors.to_numpy(),axis=0)
+            self.derivadas[2] += self.last_loaded_position_error * (self.unloaded_behavior_predictions.to_numpy()[-1,:] - self.unloaded_behavior_predictions.to_numpy()[-2,:])
+            self.derivadas = [d / len(self.unloaded_behavior_predictions.to_numpy()) for d in self.derivadas]
+            self.kP -= self.Kpalpha * self.derivadas[0]
+            self.kI -= self.Kialpha * self.derivadas[1]
+            self.kD -= self.Kdalpha * self.derivadas[2]
+            if(iteration%20 == 0):
+                print(np.array([self.kP , self.kI, self.kD]))
+            
+        
+        # if(iteration > (16+1)*2 + 120):
+        #     if(iteration%60 == 0):
+        #         self.lastCosts[self.gradientCounter] = self.cost()
+        #         if(self.gradientCounter == 0):
+        #             self.kP =  self.kP + 0.0001
+                    
+        #         elif(self.gradientCounter == 1):
+        #             self.kP =  self.kP - 0.0001
+        #             self.kPGradient = (self.lastCosts[0]-self.lastCosts[1])/0.0001
+        #             print("Gradiente: ", self.kPGradient)
+        #         if(self.gradientCounter < 1):
+        #             self.gradientCounter += 1
+        #         else:
+        #             self.gradientCounter = 0
+        #             self.kP -= self.learningRate * self.kPGradient
+        #             print("kP: ", self.kP)
+            

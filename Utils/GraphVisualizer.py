@@ -13,6 +13,8 @@ class GraphVisualizer:
         })
     
     def plotSimpleDataset(self, trajectoryNumber,load,saveGraph,trajectoryType):
+        print('Saving graph')
+
         variables = ["x(m)", "y(m)", "z(m)", "Error x", "Error y", "Error z"]
         if trajectoryType:     
             filename = ".\\DataBase\\Test trajectories\\TestTrajectory_"+str(trajectoryNumber)+"_Results.xlsx"    
@@ -102,6 +104,7 @@ class GraphVisualizer:
 
 
     def plotCompleteDataset(self, trajectoryNumber,saveGraph,trajectoryType):
+        print('Saving graph')
         delay = 16
         quadcopters_number = 4
         filename_test2 = ".\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    

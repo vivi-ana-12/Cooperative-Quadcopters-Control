@@ -1,0 +1,1 @@
+In this folder are the graphs of the simulations resulting from test 1, created from the "ANNTest.py" file executed with the "4 dynamic ropes with load - Python communication" scene and thevariable quadcopters_number set to 4. The graphs show the behavior of the drones without load and without the ANN controller.
