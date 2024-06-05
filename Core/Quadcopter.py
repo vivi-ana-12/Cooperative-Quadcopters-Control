@@ -42,7 +42,7 @@ class Quadcopter:
 
         self.sim.setObjectParent(self.targetObj,-1,True)
         
-        self.kP = np.ones(3)*1.01
+        self.kP = np.ones(3)*2.3
         self.kI = np.ones(3)*0.65
         self.kD = np.ones(3)*0.05
         

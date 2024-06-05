@@ -107,7 +107,7 @@ class GraphVisualizer:
         print('Saving graph')
         delay = 16
         quadcopters_number = 4
-        filename_test2 = ".\\DataBase\\Test Results\\Test 1\\Test1_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    
+        filename_test2 = ".\\DataBase\\Test Results\\Test 2\\Test2_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"    
         filename_Test = ".\\DataBase\\Test Results\\Test_Trajectory"+str(trajectoryNumber)+"_Results.xlsx"
 
         results, sheets = ExcelFileManager.readExcelFile(filename_Test) # Open and read the file

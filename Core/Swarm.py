@@ -59,7 +59,7 @@ class Swarm:
         if(self.simulationMode == SIMULATION_WITH_OPTIMIZER or self.simulationMode == SIMPLE_SIMULATION):
             if float(round(self.quadcopters[0].t, 2)).is_integer(): # Every second the target positions of the x, y, and z axes are updated
                 self.update_trajectory_from_file(quadcopter)
-        elif(self.simulationMode == SIMULATION_WITH_COOPERATIVE_TRAJECTORY):
+        elif(self.simulationMode == SIMULATION_WITH_COOPERATIVE_TRAJECTORY or self.simulationMode == COMPLETE_SIMULATION):
             self.update_trayectory_from_graph(quadcopter)
         else:
             return
@@ -75,7 +75,7 @@ class Swarm:
 
     def update_trajectory_from_file(self,quadcopter):
         # self.quadcopters[quadcopter].targetPos = (self.quadcopters[quadcopter].initPos + self.trajectory.iloc[int(round(self.quadcopters[0].t-1)), [0, 1, 2]]).tolist()
-        self.quadcopters[quadcopter].trajectory = (self.quadcopters[quadcopter].initPos + self.trajectory.iloc[int(round(self.quadcopters[0].t-1)), [0, 1, 2]]).tolist()
+        self.quadcopters[quadcopter].trajectory = (self.quadcopters[quadcopter].initPos + self.trajectory.iloc[int(round(self.quadcopters[0].t-1)), [0, 1, 2]]).tolist() 
     def update_target_positions(self, quadcopter, iteration):
         
         if(self.simulationMode == SIMPLE_SIMULATION or self.simulationMode == SIMULATION_WITH_COOPERATIVE_TRAJECTORY):
@@ -94,7 +94,7 @@ class Swarm:
 
             else:
                 self.quadcopters[quadcopter].targetPos = self.quadcopters[quadcopter].trajectory
-                
+              
         self.sim.setObjectPosition(self.quadcopters[quadcopter].targetObj,self.sim.handle_world,[self.quadcopters[quadcopter].targetPos[0],self.quadcopters[quadcopter].targetPos[1],self.quadcopters[quadcopter].targetPos[2]])
 
     def update_predictions_inputs(self,iteration,quadcopter):
@@ -108,7 +108,7 @@ class Swarm:
         if iteration >= (16+1)*2:
             self.quadcopters[quadcopter].predict_unloaded_behavior()
             self.quadcopters[quadcopter].calculate_loaded_position_error()
-            self.quadcopters[quadcopter].gradient_descent(iteration)
+            #self.quadcopters[quadcopter].gradient_descent(iteration)
                 
     def get_initial_positions_matrix(self, axis = np.array([1,1,1])):
         initialPosition = np.zeros((np.sum(axis), self.size))
